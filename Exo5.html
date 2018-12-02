@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<head>
+ 
+    <meta charset="utf-8" />
+ 
+    <title>Kit de Survie JS</title>
+    <meta name="description" content="">
+ 
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+
+    <style>
+    	body{ font-family: 'Quicksand', sans-serif; }
+
+    	
+	</style>
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var liste = $("ul#liste");
+        
+            $("form").submit(function(e) {
+                e.preventDefault();
+                var api = "https://geo.api.gouv.fr/communes?";
+                var contenu = $("input#champ").val();
+
+                switch ($("select#parametre").val()) {
+                    case "nom":
+                        api += 'nom=' + contenu;
+                    break;
+                    case "codepostal":
+                        api += 'codePostal='+ contenu;
+                    break;
+                    case "codedpt":
+                        api += 'codeDepartement=' + contenu;
+                    break;
+                }
+
+                liste.html("");
+                $.getJSON(api, function(data) {
+                    data.forEach(item => {
+                        var li = document.createElement("li");
+                        li.innerText = item.nom;
+                        liste.append(li);
+                    });
+                });
+            });
+        });
+   	</script>
+</head>
+<body>
+    <div >
+        <form>
+            <select name="parametre" id="parametre">
+                <option value="nom">Nom</option>
+                <option value="codepostal">Code postal</option>
+                <option value="codedpt">Code département</option>
+            </select>
+            <input id="champ" type="text" name="champ">
+            <input id="bouton" type="submit" value="Soumettre">
+        </form>
+        <ul id="liste"></ul>
+    </div>
+</body>
+ 
+</html>
